@@ -1,9 +1,11 @@
 package com.example.bromessenger.controller;
 
 
-import com.example.bromessenger.model.Friends;
+import com.example.bromessenger.JWT.AuthenticationService;
 import com.example.bromessenger.model.Users;
-import com.example.bromessenger.repositories.FriendsRepository;
+import com.example.bromessenger.model.request.SignUpRequest;
+import com.example.bromessenger.model.request.SigninRequest;
+import com.example.bromessenger.model.resonse.JwtAuthenticationResponse;
 import com.example.bromessenger.repositories.UserRepository;
 import com.example.bromessenger.service.UserService;
 import lombok.Data;
@@ -22,6 +24,7 @@ import java.util.List;
 public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     @GetMapping("/")
     public List<Users> getAllUsers(){
@@ -58,7 +61,22 @@ public class UserController {
 
         Users userSaved = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(userSaved);
+    }
+    @PostMapping("/signup")
+    public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
+        log.info("signup");
+        return ResponseEntity.ok(authenticationService.signup(request));
+    }
 
+    @PostMapping("/signin")
+    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
+        log.info("signin");
+        return ResponseEntity.ok(authenticationService.signin(request));
+    }
+
+    @GetMapping("/resource")
+    public ResponseEntity<String> sayHello() {
+        return ResponseEntity.ok("Here is your resource");
     }
 
 }
