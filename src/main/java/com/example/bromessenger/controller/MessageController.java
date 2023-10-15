@@ -6,9 +6,9 @@ import com.example.bromessenger.repositories.MessageRepository;
 import com.example.bromessenger.service.MessageService;
 import lombok.Data;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -41,6 +41,13 @@ public class MessageController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteMessage(@PathVariable Long id){
         return messageService.deleteMessageById(id);
+    }
+
+    @GetMapping("/user")
+    public ModelAndView getUser() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("signin");
+        return modelAndView;
     }
 
 }

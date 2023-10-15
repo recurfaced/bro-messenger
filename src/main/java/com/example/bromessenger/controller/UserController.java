@@ -1,13 +1,14 @@
 package com.example.bromessenger.controller;
 
-
 import com.example.bromessenger.JWT.AuthenticationService;
 import com.example.bromessenger.model.Users;
 import com.example.bromessenger.model.request.SignUpRequest;
 import com.example.bromessenger.model.request.SigninRequest;
 import com.example.bromessenger.model.resonse.JwtAuthenticationResponse;
 import com.example.bromessenger.repositories.UserRepository;
-import com.example.bromessenger.service.UserService;
+import com.example.bromessenger.service.UserServiceImpl;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -23,7 +24,7 @@ import java.util.List;
 @Slf4j
 public class UserController {
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final AuthenticationService authenticationService;
 
     @GetMapping("/")
@@ -63,20 +64,22 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userSaved);
     }
     @PostMapping("/signup")
+    @CrossOrigin("http://localhost:8080")
     public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
-        log.info("signup");
-        return ResponseEntity.ok(authenticationService.signup(request));
+        JwtAuthenticationResponse jwtResponse = authenticationService.signup(request);
+        return ResponseEntity.ok(jwtResponse);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
-        log.info("signin");
-        return ResponseEntity.ok(authenticationService.signin(request));
-    }
+    @CrossOrigin("http://localhost:8080")
+    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request, HttpServletResponse response) {
+        JwtAuthenticationResponse authenticationResponse = authenticationService.signin(request);
 
-    @GetMapping("/resource")
-    public ResponseEntity<String> sayHello() {
-        return ResponseEntity.ok("Here is your resource");
+        Cookie cookie = new Cookie("token", authenticationResponse.getToken());
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(authenticationResponse);
     }
 
 }

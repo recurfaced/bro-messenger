@@ -1,12 +1,10 @@
 package com.example.bromessenger.controller;
 
-import com.example.bromessenger.model.Friends;
 import com.example.bromessenger.repositories.FriendsRepository;
 import com.example.bromessenger.service.FriendsService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
