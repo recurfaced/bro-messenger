@@ -5,7 +5,6 @@ import org.springframework.web.socket.*;
 
 @Slf4j
 public class TutorialHandler implements WebSocketHandler {
-
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("Connection established on session: {}", session.getId());

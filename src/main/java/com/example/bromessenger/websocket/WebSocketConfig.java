@@ -8,18 +8,20 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
+@EnableWebSocketMessageBroker
 @EnableWebSocket
-public class WebSocketConfig implements WebSocketConfigurer {
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(tutorialHandler(), "/tutorial")
-                .setAllowedOrigins("*");
-
+    public void configureMessageBroker(MessageBrokerRegistry config) {
+        config.enableSimpleBroker("/my-topic");
+        config.setApplicationDestinationPrefixes("/app");
     }
 
-    @Bean
-    WebSocketHandler tutorialHandler() {
-        return new TutorialHandler();
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/connect")
+                .setAllowedOrigins("http://localhost:8080")
+                .withSockJS();
     }
 }

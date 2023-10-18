@@ -43,10 +43,10 @@ public class MessageController {
         return messageService.deleteMessageById(id);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/signin")
     public ModelAndView getUser() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("signin");
+        modelAndView.setViewName("signin.ftlh");
         return modelAndView;
     }
 
