@@ -12,11 +12,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -30,7 +28,7 @@ public class UserController {
     private final AuthenticationService authenticationService;
 
     @GetMapping("/")
-    public List<Users> getAllUsers(){
+    public List<Users> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -39,9 +37,10 @@ public class UserController {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with this id not found"));
     }
+
     @PutMapping("/edit/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id,@RequestBody Users userRequest){
-        return userService.editUserInfo(id,userRequest);
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody Users userRequest) {
+        return userService.editUserInfo(id, userRequest);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -54,7 +53,7 @@ public class UserController {
     }
 
     @PostMapping("/create/user")
-    public ResponseEntity<Users> createUser(@RequestBody Users userRequest){
+    public ResponseEntity<Users> createUser(@RequestBody Users userRequest) {
 
         Users user = new Users();
         user.setUsername(userRequest.getUsername());
@@ -65,6 +64,7 @@ public class UserController {
         Users userSaved = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(userSaved);
     }
+
     @PostMapping("/signup")
     @CrossOrigin("http://localhost:8080")
     public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {

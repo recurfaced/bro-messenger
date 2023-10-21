@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class RestExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex){
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND,ex.getMessage());
-        return new ResponseEntity<>(apiError,apiError.getStatus());
+    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 }

@@ -17,12 +17,12 @@ public class FriendsController {
     private final FriendsService friendsService;
 
     @PostMapping("/add/friends/{id}")
-    public ResponseEntity<?> addFriends(@PathVariable Long id, @RequestParam Long friendId){
-       return friendsService.addFriend(id,friendId);
+    public ResponseEntity<?> addFriends(@PathVariable Long id, @RequestParam Long friendId) {
+        return friendsService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteFriend(@RequestParam Long userId,@RequestParam Long friendId){;
-        return friendsService.deleteFriendById(userId,friendId);
+    public ResponseEntity<?> deleteFriend(@RequestParam Long userId, @RequestParam Long friendId) {
+        return friendsService.deleteFriendById(userId, friendId);
     }
 }

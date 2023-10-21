@@ -20,26 +20,26 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping("/create")
-    public ResponseEntity<Chats> createChat(@RequestBody Chats chatsRequest){
-     Chats chats = chatsRepository.save(chatsRequest);
-     return ResponseEntity.status(HttpStatus.CREATED).body(chats);
+    public ResponseEntity<Chats> createChat(@RequestBody Chats chatsRequest) {
+        Chats chats = chatsRepository.save(chatsRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(chats);
     }
+
     @PostMapping("/add/members")
     public ResponseEntity<ChatMembers> createChatMembers(
-            @RequestBody ChatMembers chatMembersRequest){
-        ChatMembers chatMembers =chatMembersRepository.save(chatMembersRequest);
+            @RequestBody ChatMembers chatMembersRequest) {
+        ChatMembers chatMembers = chatMembersRepository.save(chatMembersRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(chatMembers);
     }
 
     @DeleteMapping("/delete/chatmember")
-    public ResponseEntity<?> deleteMember(@RequestParam Long userId,@RequestParam Long chatId){
+    public ResponseEntity<?> deleteMember(@RequestParam Long userId, @RequestParam Long chatId) {
         try {
-            chatService.deleteMemberFromChat(userId,chatId);
+            chatService.deleteMemberFromChat(userId, chatId);
             return ResponseEntity.ok("пользователь удален с чата");
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to remove chat member.");
         }
     }
