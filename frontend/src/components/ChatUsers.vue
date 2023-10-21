@@ -1,35 +1,46 @@
 <template>
     <div>
-        <button @click="connectWebSocket">Подключиться</button>
-        <button @click="disconnectWebSocket">Отключиться</button>
+        <ul>
+            <li v-for="message in messages" :key="message.id">
+                {{ message.content }}
+            </li>
+        </ul>
+        <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Введите сообщение" />
     </div>
 </template>
 
 <script>
-import { ref } from 'vue';
-import { connect, disconnect } from '@/socket';
-
 export default {
-    setup() {
-        const stompClient = ref(null);
-        const isConnected = ref(false);
-
-        const connectWebSocket = () => {
-            stompClient.value = connect({
-            });
-            isConnected.value = true;
-        };
-
-        const disconnectWebSocket = () => {
-            disconnect(stompClient.value);
-            isConnected.value = false;
-        };
-
+    data() {
         return {
-            connectWebSocket,
-            disconnectWebSocket,
-            isConnected
+            websocket: null,
+            messages: [],
+            newMessage: ''
         };
     },
+    mounted() {
+        this.websocket = new WebSocket('ws://localhost:8084/ws');
+        this.websocket.onmessage = this.onMessage;
+    },
+    methods: {
+        onMessage(event) {
+            const message = JSON.parse(event.data);
+            this.messages.push(message);
+        },
+        sendMessage() {
+            if (this.newMessage) {
+                const message = {
+                    content: this.newMessage,
+                };
+                this.websocket.send(JSON.stringify(message));
+                this.newMessage = '';
+            }
+        }
+    },
+    beforeUnmount() {
+        if (this.websocket) {
+            this.websocket.close();
+        }
+    }
 };
 </script>
