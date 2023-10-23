@@ -52,18 +52,6 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/create/user")
-    public ResponseEntity<Users> createUser(@RequestBody Users userRequest) {
-
-        Users user = new Users();
-        user.setUsername(userRequest.getUsername());
-        user.setEmail(userRequest.getEmail());
-        user.setPassword(userRequest.getPassword());
-        user.setStatus(userRequest.isStatus());
-
-        Users userSaved = userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userSaved);
-    }
 
     @PostMapping("/signup")
     @CrossOrigin("http://localhost:8080")
