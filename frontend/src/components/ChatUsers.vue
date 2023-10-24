@@ -20,6 +20,7 @@ export default {
     },
     mounted() {
         this.websocket = new WebSocket('ws://localhost:8084/ws');
+        console.log(this.websocket)
         this.websocket.onmessage = this.onMessage;
     },
     methods: {
