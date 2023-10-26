@@ -36,5 +36,8 @@ public class Chats {
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.MERGE)
     private List<Messages> messages = new ArrayList<>();
+    public Chats(Long id) {
+        this.id = id;
+    }
 
 }

@@ -69,5 +69,8 @@ public class Users implements UserDetails {
     private List<ChatMembers> chatMembers = new ArrayList<>();
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Messages> messages = new ArrayList<>();
+    public Users(Long id) {
+        this.id = id;
+    }
 
 }

@@ -19,32 +19,29 @@ export default {
         };
     },
     mounted() {
-        console.log("mounted")
         this.websocket = new WebSocket('ws://localhost:8084/ws');
-        console.log(this.websocket)
-
         this.websocket.onopen = () => {
             console.log("WebSocket connected");
-            this.websocket.send("/app/ws");
         };
-
         this.websocket.onmessage = this.onMessage;
     },
     methods: {
         onMessage(event) {
+            console.log("Entering onMessage");
             const message = JSON.parse(event.data);
-            console.log("onMessage")
+            console.log("onMessage", message);
             this.messages.push(message);
         },
         sendMessage() {
-            console.log("sendMessage")
             if (this.newMessage) {
                 const message = {
                     content: this.newMessage,
-                    sender:"user",
+                    sender:"852",
+                    chatId:"103",
+                    createdAt:"2023-10-26 10:00:00.000000",
                 };
                 console.log(message)
-                this.websocket.send(JSON.stringify(message));
+                this.websocket.send("ws://localhost:8084/app/ws", {}, JSON.stringify(message));
                 this.newMessage = '';
             }
         }
