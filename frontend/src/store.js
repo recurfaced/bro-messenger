@@ -7,6 +7,9 @@ const store = createStore({
         setAuthenticated(state, isAuthenticated) {
             state.isAuthenticated = isAuthenticated
         },
+        setUserId(state, userId) {
+            state.userId = userId;
+        },
     },
     actions: {
         login({ commit }) {

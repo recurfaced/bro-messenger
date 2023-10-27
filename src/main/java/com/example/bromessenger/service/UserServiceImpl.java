@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Data
 @Slf4j
@@ -36,5 +38,10 @@ public class UserServiceImpl implements UserService {
                         .orElseThrow(()-> new UsernameNotFoundException("User not found"));
             }
         };
+    }
+
+    public String getUsernameById(Long friendId) {
+        Optional<Users> userOptional = userRepository.findById(friendId);
+        return userOptional.map(Users::getUsername).orElse(null);
     }
 }

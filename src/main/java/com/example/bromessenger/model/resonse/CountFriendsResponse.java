@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JwtAuthenticationResponse {
-    private String token;
-    private Long userId;
+public class CountFriendsResponse {
+    private int friendsCount;
 }

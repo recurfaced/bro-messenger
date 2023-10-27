@@ -5,11 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JwtAuthenticationResponse {
-    private String token;
-    private Long userId;
+public class ListFriendsResponse {
+    private Map<Long, String> getFriendsListById;
 }

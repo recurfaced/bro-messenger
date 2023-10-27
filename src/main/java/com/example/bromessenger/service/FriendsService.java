@@ -9,12 +9,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 @Slf4j
 @Data
 public class FriendsService {
+    private final UserServiceImpl userService;
     private final FriendsRepository friendsRepository;
     public ResponseEntity<?> deleteFriendById(Long userId, Long friendId) {
        Optional<Friends> optionalFriends =
@@ -36,5 +40,16 @@ public class FriendsService {
         friends.setFriendId(friendId);
         friendsRepository.save(friends);
         return ResponseEntity.ok("друг добавлен");
+    }
+    public Map<Long, String> getFriendsListById(Long userId) {
+        List<Friends> friends = friendsRepository.findByUserId(userId);
+        Map<Long, String> friendsMap = new HashMap<>();
+
+        for (Friends friend : friends) {
+            Long friendId = friend.getFriendId();
+            String friendUsername = userService.getUsernameById(friendId);
+            friendsMap.put(friendId, friendUsername);
+        }
+        return friendsMap;
     }
 }

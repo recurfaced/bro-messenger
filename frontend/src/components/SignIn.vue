@@ -38,8 +38,12 @@ export default {
                     )
                 .then(response => {
                     var token = response.data.token;
+                    var userId = response.data.userId;
+                    console.log("UserID:", userId);
+                    this.$store.commit('setUserId', userId);
                     document.cookie = `token=${token}; path=/`;
-                    this.$router.push('/chat');
+                    this.$router.push('/main');
+                    this.$router.push({ name: 'mainPage', params: { userId: userId } });
                 })
                 .catch(error => {
                     this.message = "Authentication failed. Please check your credentials.";

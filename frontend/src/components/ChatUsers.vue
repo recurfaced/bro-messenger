@@ -1,56 +1,53 @@
 <template>
     <div>
-        <ul>
-            <li v-for="message in messages" :key="message.id">
-                {{ message.content }}
-            </li>
-        </ul>
-        <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Введите сообщение" />
+        <div id="greetings">{{ greetings }}</div>
+        <input v-model="name" placeholder="Введите сообщение" />
+        <button @click="connect">Подключиться</button>
+        <button @click="disconnect">Отключиться</button>
+        <button @click="sendName">Отправить</button>
     </div>
 </template>
-
 <script>
 export default {
     data() {
         return {
-            websocket: null,
-            messages: [],
-            newMessage: ''
+            ws: null,
+            name: '',
+            greetings: '',
+            isConnected: false,
         };
-    },
-    mounted() {
-        this.websocket = new WebSocket('ws://localhost:8084/ws');
-        this.websocket.onopen = () => {
-            console.log("WebSocket connected");
-        };
-        this.websocket.onmessage = this.onMessage;
     },
     methods: {
-        onMessage(event) {
-            console.log("Entering onMessage");
-            const message = JSON.parse(event.data);
-            console.log("onMessage", message);
-            this.messages.push(message);
+        connect() {
+            this.ws = new WebSocket('ws://localhost:8084/ws');
+            this.ws.onmessage = this.showGreeting;
+            this.setConnected(true);
         },
-        sendMessage() {
-            if (this.newMessage) {
-                const message = {
-                    content: this.newMessage,
-                    sender:"852",
-                    chatId:"103",
-                    createdAt:"2023-10-26 10:00:00.000000",
-                };
-                console.log(message)
-                this.websocket.send("ws://localhost:8084/app/ws", {}, JSON.stringify(message));
-                this.newMessage = '';
+        disconnect() {
+            if (this.ws !== null) {
+                this.ws.close();
             }
-        }
+            this.setConnected(false);
+            console.log('Disconnected');
+        },
+        sendName() {
+            if (this.ws !== null) {
+                const message = {
+                    name: this.name
+                };
+                this.ws.send(JSON.stringify(message));
+            }
+        },
+
+        showGreeting(event) {
+            this.greetings += ' ' + event.data;
+        },
+        setConnected(value) {
+            this.isConnected = value;
+        },
     },
     beforeUnmount() {
-        if (this.websocket) {
-            console.log("beforeUnmount")
-            this.websocket.close();
-        }
-    }
+        this.disconnect();
+    },
 };
 </script>
