@@ -2,8 +2,8 @@ package com.example.bromessenger.controller;
 
 import com.example.bromessenger.service.AuthenticationService;
 import com.example.bromessenger.model.User;
-import com.example.bromessenger.model.request.SignUpRequest;
-import com.example.bromessenger.model.request.SigninRequest;
+import com.example.bromessenger.model.request.auth.SignUpRequest;
+import com.example.bromessenger.model.request.auth.SigninRequest;
 import com.example.bromessenger.model.resonse.JwtAuthenticationResponse;
 import com.example.bromessenger.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;

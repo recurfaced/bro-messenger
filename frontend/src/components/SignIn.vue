@@ -7,17 +7,16 @@
                 Register
             </div>
         </div>
-            <div class="">
-                <input type="text" v-model="email" placeholder="Email">
-                <input type="password" v-model="password" placeholder="Password">
+            <div>
+                <input type="text" v-model="email" placeholder="email">
+                <input type="password" v-model="password" placeholder="password">
                 <div class="error">{{ message }}</div>
+                <input type="submit" value="Sign in" @click="login"/>
             </div>
 
         <div class="clear"></div>
         <form action="#">
-            <div>
-                <input type="submit" value="Sign in" @click="login"/>
-            </div>
+
             <div class="radio-check">
                 <input type="radio" class="radio-no" id="no" name="remember" value="no" checked>
                 <label for="no"><i class="fa fa-times"></i></label>

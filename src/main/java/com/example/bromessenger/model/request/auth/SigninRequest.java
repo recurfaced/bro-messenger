@@ -1,4 +1,4 @@
-package com.example.bromessenger.model.request;
+package com.example.bromessenger.model.request.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpRequest {
-    private String username;
+public class SigninRequest {
     private String email;
     private String password;
-    private boolean status;
 }

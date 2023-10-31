@@ -12,6 +12,7 @@
 
 <script>
 import { getFriendsList } from "@/api";
+import { getChatId } from "@/api";
 
 export default {
     name: "UserFriendsList",
@@ -29,8 +30,23 @@ export default {
         }
     },
     methods: {
-        sendMessage(friendId) {
-            console.log(`Отправить сообщение другу с ID: ${friendId}`);
+        async sendMessage(friendId) {
+            const userId = parseInt(this.$route.params.userId, 10);
+            console.log(userId);
+            console.log(friendId);
+
+            const createChat = {
+                userId: userId,
+                friendId: friendId,
+            };
+            console.log(createChat)
+
+            try {
+                await getChatId(createChat);
+                this.$router.push({ name: 'chat-user', params: { id: friendId, userId: userId } });
+            } catch (error) {
+                console.error(error);
+            }
         },
     },
 };

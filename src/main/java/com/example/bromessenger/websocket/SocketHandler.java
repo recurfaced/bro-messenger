@@ -1,6 +1,7 @@
 package com.example.bromessenger.websocket;
 
 import com.google.gson.Gson;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -17,8 +18,8 @@ public class SocketHandler extends TextWebSocketHandler {
     List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message)
-            throws InterruptedException, IOException {
+    @SneakyThrows
+    public void handleTextMessage(WebSocketSession session, TextMessage message) {
 
         String payload = message.getPayload();
         System.out.println("Received message: " + payload);
@@ -29,7 +30,8 @@ public class SocketHandler extends TextWebSocketHandler {
         }
     }
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    @SneakyThrows
+    public void afterConnectionEstablished(WebSocketSession session){
         System.out.println("сессия добавлена");
         sessions.add(session);
     }

@@ -37,16 +37,15 @@ export const getFriendsCount = async (userId) => {
 
 export const getFriendsList = async (userId) => {
     const token = getToken();
+    console.log(token)
     const response = await instance.get(`/friends/list/${userId}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     });
 
-    // Извлекаем объект с друзьями из response.data
     const friendsMap = response.data.getFriendsListById;
 
-    // Преобразуем объект в массив объектов с нужными свойствами (id и username)
     const dataArray = Object.entries(friendsMap).map(([id, username]) => ({
         id: Number(id),
         username: username
@@ -54,6 +53,17 @@ export const getFriendsList = async (userId) => {
 
     console.log(dataArray);
     return dataArray;
+};
+export const getChatId = async (chatsRequest) => {
+    const token = getToken()
+        const response = await instance.post('/chat/',
+            chatsRequest,
+            {
+            headers:{
+                Authorization: `Bearer ${token}`,
+            }
+        });
+    console.log("все прошло сексуально" + response.data)
 };
 
 

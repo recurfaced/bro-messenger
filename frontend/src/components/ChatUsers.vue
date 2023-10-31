@@ -2,8 +2,6 @@
     <div>
         <div id="greetings">{{ greetings }}</div>
         <input v-model="name" placeholder="Введите сообщение" />
-        <button @click="connect">Подключиться</button>
-        <button @click="disconnect">Отключиться</button>
         <button @click="sendName">Отправить</button>
     </div>
 </template>
@@ -36,6 +34,7 @@ export default {
         },
         sendName() {
             if (this.ws !== null) {
+
                 const message = {
                     name: this.name
                 };
@@ -49,6 +48,9 @@ export default {
         setConnected(value) {
             this.isConnected = value;
         },
+    },
+    mounted() {
+        this.connect();
     },
     beforeUnmount() {
         this.disconnect();

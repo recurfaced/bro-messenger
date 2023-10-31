@@ -1,7 +1,7 @@
 package com.example.bromessenger.controller;
 
 import com.example.bromessenger.model.ChatMember;
-import com.example.bromessenger.model.Chat;
+import com.example.bromessenger.model.request.chat.CreateChatRequest;
 import com.example.bromessenger.service.ChatService;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ public class ChatController {
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createChat(@RequestBody Chat chatsRequest) {
+    public void createChat(@RequestBody CreateChatRequest chatsRequest) {
         chatService.createChat(chatsRequest);
     }
 

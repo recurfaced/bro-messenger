@@ -3,14 +3,13 @@ package com.example.bromessenger.service;
 import com.example.bromessenger.service.JWT.JwtService;
 import com.example.bromessenger.model.User;
 import com.example.bromessenger.model.enums.Role;
-import com.example.bromessenger.model.request.SignUpRequest;
-import com.example.bromessenger.model.request.SigninRequest;
+import com.example.bromessenger.model.request.auth.SignUpRequest;
+import com.example.bromessenger.model.request.auth.SigninRequest;
 import com.example.bromessenger.model.resonse.JwtAuthenticationResponse;
 import com.example.bromessenger.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
