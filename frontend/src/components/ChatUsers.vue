@@ -20,8 +20,12 @@ export default {
     methods: {
         connect() {
             this.ws = new WebSocket('ws://localhost:8084/ws');
+            this.ws.onopen = () => {
+                console.log("Connected");
+            };
             this.ws.onmessage = this.showGreeting;
             this.setConnected(true);
+
         },
         disconnect() {
             if (this.ws !== null) {

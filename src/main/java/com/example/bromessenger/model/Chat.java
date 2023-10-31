@@ -14,29 +14,25 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Chats {
+public class Chat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "createdAt")
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "typeChat")
     private TypeChat typeChat;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.MERGE)
-    private List<ChatMembers> chatMembers = new ArrayList<>();
+    private List<ChatMember> chatMembers = new ArrayList<>();
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.MERGE)
-    private List<Messages> messages = new ArrayList<>();
-    public Chats(Long id) {
+    private List<Message> messages = new ArrayList<>();
+    public Chat(Long id) {
         this.id = id;
     }
 

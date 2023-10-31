@@ -1,8 +1,7 @@
-package com.example.bromessenger.exeption;
+package com.example.bromessenger.exception;
 
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -10,8 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class RestExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
+    public ApiError handleResourceNotFoundException(ResourceNotFoundException ex) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
-        return new ResponseEntity<>(apiError, apiError.getStatus());
+        return new ApiError(apiError.getStatus(),apiError.getMessage());
     }
 }

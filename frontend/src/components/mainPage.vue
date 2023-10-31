@@ -53,5 +53,4 @@ export default {
 </script>
 
 <style scoped>
-/* Здесь вы можете добавить стили для вашей страницы профиля */
 </style>

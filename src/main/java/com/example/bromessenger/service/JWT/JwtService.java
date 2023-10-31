@@ -1,4 +1,4 @@
-package com.example.bromessenger.JWT;
+package com.example.bromessenger.service.JWT;
 
 import org.springframework.security.core.userdetails.UserDetails;
 

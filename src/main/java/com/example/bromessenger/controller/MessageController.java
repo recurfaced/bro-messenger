@@ -1,11 +1,11 @@
 package com.example.bromessenger.controller;
 
 
-import com.example.bromessenger.model.Messages;
-import com.example.bromessenger.repositories.MessageRepository;
+import com.example.bromessenger.model.Message;
 import com.example.bromessenger.service.MessageService;
 import lombok.Data;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,29 +13,28 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/messages")
-@Data
+@RequiredArgsConstructor
 public class MessageController {
-    private final MessageRepository messageRepository;
     private final MessageService messageService;
 
     @GetMapping("/")
-    public List<Messages> getAllMessages() {
-        return messageRepository.findAll();
+    public List<Message> getAllMessages() {
+        return messageService.getAllMessageService();
     }
 
     @GetMapping("/{id}")
-    public Messages getMessageById(@PathVariable Long id) {
-        return messageRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Message not found"));
+    public Message getMessageById(@PathVariable Long id) {
+        return messageService.getMessageByIdService(id);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Messages> createMessage(@RequestBody Messages messagesRequest) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Message> createMessage(@RequestBody Message messagesRequest) {
         return messageService.createMessage(messagesRequest);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateMessage(@PathVariable Long id, @RequestBody Messages messageRequest) {
+    public ResponseEntity<?> updateMessage(@PathVariable Long id, @RequestBody Message messageRequest) {
         return messageService.updateMessage(id, messageRequest);
     }
 

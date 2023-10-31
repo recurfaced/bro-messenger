@@ -2,8 +2,9 @@
     <div>
         <h1>Список друзей</h1>
         <ul>
-            <li v-for="(friendUsername, friendId) in friendsList" :key="friendId">
-                {{ friendUsername }}
+            <li v-for="friend in friendsList" :key="friend.id">
+                {{ friend.username }}
+                <button @click="sendMessage(friend.id)">Написать bro</button>
             </li>
         </ul>
     </div>
@@ -16,21 +17,27 @@ export default {
     name: "UserFriendsList",
     data() {
         return {
-            friendsList: {}, // Объект для хранения id и username друзей
+            friendsList: [],
         };
     },
     async mounted() {
         try {
-            // Получаем список друзей пользователя
             const friends = await getFriendsList(this.$route.params.userId);
             this.friendsList = friends;
-            console.log("друзья" + this.friendsList)
         } catch (error) {
-            console.log(error)
+            console.error(error);
         }
+    },
+    methods: {
+        sendMessage(friendId) {
+            console.log(`Отправить сообщение другу с ID: ${friendId}`);
+        },
     },
 };
 </script>
 
 <style scoped>
+ul {
+    list-style-type: none;
+}
 </style>

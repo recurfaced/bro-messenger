@@ -42,6 +42,19 @@ export const getFriendsList = async (userId) => {
             Authorization: `Bearer ${token}`,
         },
     });
-    console.log(response.data);
-    return response.data;
+
+    // Извлекаем объект с друзьями из response.data
+    const friendsMap = response.data.getFriendsListById;
+
+    // Преобразуем объект в массив объектов с нужными свойствами (id и username)
+    const dataArray = Object.entries(friendsMap).map(([id, username]) => ({
+        id: Number(id),
+        username: username
+    }));
+
+    console.log(dataArray);
+    return dataArray;
 };
+
+
+

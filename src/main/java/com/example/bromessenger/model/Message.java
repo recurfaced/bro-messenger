@@ -5,28 +5,26 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
-@AllArgsConstructor
-@Data
 @NoArgsConstructor
-public class ChatMembers {
-
+@Data
+public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_member_id")
-    private Long chatMemberId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    private String content;
+
+    private LocalDateTime createdAt;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "chat_id")
-    private Chats chat;
+    private Chat chat;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
-    private Users user;
-
-    @Column(name = "is_admin")
-    private boolean isAdmin;
+    private User user;
 
 }

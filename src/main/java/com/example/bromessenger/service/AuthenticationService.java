@@ -1,4 +1,4 @@
-package com.example.bromessenger.JWT;
+package com.example.bromessenger.service;
 
 import com.example.bromessenger.model.request.SignUpRequest;
 import com.example.bromessenger.model.request.SigninRequest;

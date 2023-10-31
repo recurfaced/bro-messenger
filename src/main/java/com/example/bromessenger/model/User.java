@@ -18,24 +18,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Users implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
     private String username;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "status")
     private boolean status;
-    @Column(name = "lastLogin")
     private LocalDateTime lastLogin;
 
     @Enumerated(EnumType.STRING)
@@ -66,10 +60,10 @@ public class Users implements UserDetails {
     }
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<ChatMembers> chatMembers = new ArrayList<>();
+    private List<ChatMember> chatMembers = new ArrayList<>();
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Messages> messages = new ArrayList<>();
-    public Users(Long id) {
+    private List<Message> messages = new ArrayList<>();
+    public User(Long id) {
         this.id = id;
     }
 

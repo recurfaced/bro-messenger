@@ -1,17 +1,15 @@
 package com.example.bromessenger.controller;
 
-import com.example.bromessenger.JWT.AuthenticationService;
-import com.example.bromessenger.model.Users;
+import com.example.bromessenger.service.AuthenticationService;
+import com.example.bromessenger.model.User;
 import com.example.bromessenger.model.request.SignUpRequest;
 import com.example.bromessenger.model.request.SigninRequest;
 import com.example.bromessenger.model.resonse.JwtAuthenticationResponse;
-import com.example.bromessenger.repositories.UserRepository;
 import com.example.bromessenger.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,38 +21,33 @@ import java.util.List;
 @Data
 @Slf4j
 public class UserController {
-    private final UserRepository userRepository;
     private final UserServiceImpl userService;
     private final AuthenticationService authenticationService;
 
     @GetMapping("/")
-    public List<Users> getAllUsers() {
-        return userRepository.findAll();
+    public List<User> getAllUser() {
+        return userService.getAllUserService();
     }
 
     @GetMapping("/{id}")
-    public Users getUserById(@PathVariable Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User with this id not found"));
+    public User getUserById(@PathVariable Long id) {
+        return userService.getUserByIdService(id);
     }
 
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody Users userRequest) {
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User userRequest) {
         return userService.editUserInfo(id, userRequest);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        Users user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("ошибка удаления"));
-        userRepository.delete(user);
-
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUserService(id);
     }
 
 
     @PostMapping("/signup")
     @CrossOrigin("http://localhost:8080")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
         JwtAuthenticationResponse jwtResponse = authenticationService.signup(request);
         return ResponseEntity.ok(jwtResponse);
