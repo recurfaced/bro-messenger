@@ -3,8 +3,9 @@
         <div class="menu">
             <button @click="showProfile">Мой профиль</button>
             <button @click="showProfile">Новости</button>
-            <button @click="showFriends">Мои бро ({{ friendsCount }})</button>
+            <button @click="showFriends">Мои бро {{ friendsCount }}</button>
             <button @click="showMessages">Сообщения</button>
+            <button >Заявки в бро</button>
             <button >Группы</button>
             <button >Музыка</button>
             <button >Видео</button>
@@ -12,7 +13,7 @@
         </div>
         <div class="info">
             <div class="avatar">
-                avatar block
+                avatar
             </div>
             <h1>{{ username }}'a профиль</h1>
         </div>
@@ -20,13 +21,12 @@
 </template>
 
 <script>
-import { getFriendsCount, getUserById } from "@/api";
-
+import { getUserById } from "@/api";
 export default {
     data() {
         return {
             username: "",
-            friendsCount: 0,
+            friends: 0,
 
         };
     },
@@ -38,27 +38,19 @@ export default {
             console.log("Показать сообщения");
         },
         showFriends() {
-            this.$router.push({ name: 'UserFriendsList', params: { userId: this.$route.params.userId } });
-        },
-
-        async fetchData() {
-            const userId = this.$route.params.userId;
-            try {
-                const [userResponse, friendsCount] = await Promise.all([
-                    getUserById(userId),
-                    getFriendsCount(userId),
-                ]);
-
-                this.username = userResponse.username;
-                this.friendsCount = friendsCount;
-            } catch (error) {
-                console.error(error);
-                this.$router.push('/error');
-            }
+            this.$router.push({ name: 'UserFriendsList'});
         },
     },
-    mounted() {
-        this.fetchData();
+    async beforeMount() {
+        try {
+            const userResponse = await getUserById();
+            console.log(userResponse.friends)
+            this.username = userResponse.username;
+            this.friendsCount = userResponse.friends;
+        } catch (error) {
+            console.error(error);
+            this.$router.push('/error');
+        }
     },
 };
 </script>

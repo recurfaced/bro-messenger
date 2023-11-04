@@ -5,7 +5,7 @@ import com.example.bromessenger.model.Chat;
 import com.example.bromessenger.model.ChatMember;
 import com.example.bromessenger.model.User;
 import com.example.bromessenger.model.enums.TypeChat;
-import com.example.bromessenger.model.request.chat.CreateChatRequest;
+import com.example.bromessenger.web.request.chat.CreateChatRequest;
 import com.example.bromessenger.repositories.ChatMembersRepository;
 import com.example.bromessenger.repositories.ChatsRepository;
 import com.example.bromessenger.repositories.UserRepository;
@@ -43,13 +43,15 @@ public class ChatService {
         User friend = userRepository.findById(createChatRequest.getFriendId())
                 .orElseThrow(()->new ResourceNotFoundException("user not found"));
 
+
+
         Chat chat = new Chat();
-        ChatMember chatMember1 = new ChatMember();
-        ChatMember chatMember2 = new ChatMember();
         chat.setName("лс");
         chat.setTypeChat(TypeChat.PRIVATE);
         chatsRepository.save(chat);
 
+        ChatMember chatMember1 = new ChatMember();
+        ChatMember chatMember2 = new ChatMember();
         chatMember1.setChat(chat);
         chatMember1.setUser(user);
         chatMembersRepository.save(chatMember1);

@@ -1,12 +1,12 @@
 package com.example.bromessenger.service.JWT;
 
+import com.example.bromessenger.sex.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -21,23 +21,26 @@ public class JwtServiceImpl implements JwtService {
     private String jwtSigningKey;
 
     @Override
-    public String extractUserName(String token) {
+    public Long extractUserName(String token) {
         //Этот метод извлекает имя пользователя (subject) из токена
         //Возвращает имя пользователя, извлеченное из токена
-        return extractClaim(token, Claims::getSubject);
+        final Claims claims = extractAllClaims(token);
+        return claims.get("id", Long.class);
     }
 
     @Override
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(CustomUserDetails userDetails) {
         // Генерирует JWT токен для указанного объекта UserDetails
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", userDetails.getUserId());
+        return generateToken(claims, userDetails);
     }
 
     @Override
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean isTokenValid(String token, CustomUserDetails userDetails) {
         //Возвращает true, если токен действителен для указанного пользователя, в противном случае - falseВозвращает true
-        final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        final Long userId = extractUserName(token);
+        return (userId.equals(userDetails.getUserId())) && !isTokenExpired(token);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
@@ -45,13 +48,14 @@ public class JwtServiceImpl implements JwtService {
         return claimsResolvers.apply(claims);
     }
 
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        //Генерирует JWT токен с дополнительными claim и для указанного объекта UserDetails
-        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
+    private String generateToken(Map<String, Object> extraClaims, CustomUserDetails userDetails) {
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUserId().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
-        //Возвращает сгенерированный JWT токен в виде строки
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private boolean isTokenExpired(String token) {

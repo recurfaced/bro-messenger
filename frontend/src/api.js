@@ -8,51 +8,34 @@ const instance = axios.create({
 });
 
 const getToken = () => {
-    const token = document.cookie
+    return document.cookie
         .split("; ")
         .find(row => row.startsWith("token="))
         .split("=")[1];
-    return token;
 };
 
-export const getUserById = async (userId) => {
+
+
+export const getFriendsList = async () => {
     const token = getToken();
-    const response = await instance.get(`/users/${userId}`, {
+    const response = await instance.get(`/friends/list`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     });
+
     return response.data;
 };
 
-export const getFriendsCount = async (userId) => {
+export const getFriendsListRequest = async () => {
     const token = getToken();
-    const response = await instance.get(`/friends/count/${userId}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-    return response.data.friendsCount;
-};
-
-export const getFriendsList = async (userId) => {
-    const token = getToken();
-    console.log(token)
-    const response = await instance.get(`/friends/list/${userId}`, {
+    const response = await instance.get(`/friends/request`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     });
 
-    const friendsMap = response.data.getFriendsListById;
-
-    const dataArray = Object.entries(friendsMap).map(([id, username]) => ({
-        id: Number(id),
-        username: username
-    }));
-
-    console.log(dataArray);
-    return dataArray;
+    return response.data;
 };
 export const getChatId = async (chatsRequest) => {
     const token = getToken()
@@ -64,6 +47,29 @@ export const getChatId = async (chatsRequest) => {
             }
         });
     console.log("все прошло сексуально" + response.data)
+};
+
+export const authUser = async (auth)=>{
+    const response = await instance.post("/users/signin",
+        auth,{
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            },
+        })
+    var token =response.data.token
+    document.cookie=`token=${token}; path=/`;
+    console.log(response.data)
+    return response.data;
+};
+export const getUserById = async () => {
+    const token = getToken();
+    const response = await instance.get(`/users/`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
 };
 
 

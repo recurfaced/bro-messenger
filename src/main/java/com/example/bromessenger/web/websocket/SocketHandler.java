@@ -1,4 +1,4 @@
-package com.example.bromessenger.websocket;
+package com.example.bromessenger.web.websocket;
 
 import com.google.gson.Gson;
 import lombok.SneakyThrows;

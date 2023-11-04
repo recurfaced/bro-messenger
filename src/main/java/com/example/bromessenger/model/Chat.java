@@ -27,10 +27,10 @@ public class Chat {
     @Enumerated(EnumType.STRING)
     private TypeChat typeChat;
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     private List<ChatMember> chatMembers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     private List<Message> messages = new ArrayList<>();
     public Chat(Long id) {
         this.id = id;

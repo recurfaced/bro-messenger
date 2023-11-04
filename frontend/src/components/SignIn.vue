@@ -33,8 +33,7 @@
 </template>
 
 <script>
-import axios from "axios";
-
+import { authUser } from "@/api";
 export default {
     data() {
         return {
@@ -48,33 +47,19 @@ export default {
         msg: String
     },
     methods: {
-        login() {
-            axios
-                .post('/api/users/signin', {
-                    email: this.email,
-                    password: this.password
-                },
-                    {
-                        headers: {
-                            'Access-Control-Allow-Origin': '*',
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                    )
-                .then(response => {
-                    var token = response.data.token;
-                    var userId = response.data.userId;
-                    console.log("UserID:", userId);
-                    this.$store.commit('setUserId', userId);
-                    document.cookie = `token=${token}; path=/`;
-                    this.$router.push('/main');
-                    this.$router.push({ name: 'mainPage', params: { userId: userId } });
-                })
-                .catch(error => {
-                    this.message = "Authentication failed. Please check your credentials.";
-                    console.error(error);
-                });
-        }
+        async login(){
+            const  auth = {
+                email:this.email,
+                password:this.password
+            }
+            try {
+                await authUser(auth)
+                this.$router.push({ name: 'mainPage' });
+            }catch (error){
+                this.message = "Authentication failed. Please check your credentials.";
+                console.log(error)
+            }
+        },
     },
     mounted() {
     }

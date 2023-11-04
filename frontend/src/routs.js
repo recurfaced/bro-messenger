@@ -30,13 +30,12 @@ const routes = [
         component: Main,
     },
     {
-        path: '/mainPage/:userId',
+        path: '/mainPage',
         name: 'mainPage',
         component: Main,
-        props: true,
     },
     {
-        path: '/friends/:userId',
+        path: '/friends',
         name: "UserFriendsList",
         component: ListFriends,
         props: true,

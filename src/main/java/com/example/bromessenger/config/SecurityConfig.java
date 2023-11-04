@@ -32,6 +32,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService userDetailsService;
 
+
     @Bean
     @SneakyThrows
     protected SecurityFilterChain filterChain(HttpSecurity http){

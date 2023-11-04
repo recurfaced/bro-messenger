@@ -1,4 +1,4 @@
-package com.example.bromessenger.websocket;
+package com.example.bromessenger.web.websocket;
 
 import lombok.Data;
 
