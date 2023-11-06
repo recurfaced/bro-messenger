@@ -5,6 +5,7 @@ import com.example.bromessenger.repositories.ChatsRepository;
 import com.example.bromessenger.repositories.MessageRepository;
 import com.example.bromessenger.repositories.UserRepository;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,8 @@ import java.util.List;
 
 @Service
 @Slf4j
-@Data
-public class MessageService {
+@RequiredArgsConstructor
+public final class MessageService {
     private final MessageRepository messageRepository;
     private final ChatsRepository chatRepository;
     private final UserRepository userRepository;

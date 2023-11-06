@@ -78,4 +78,7 @@ public class User implements CustomUserDetails {
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Friend> friends = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<Token> token = new ArrayList<>();
 }

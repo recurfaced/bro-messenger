@@ -22,15 +22,12 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public Long extractUserName(String token) {
-        //Этот метод извлекает имя пользователя (subject) из токена
-        //Возвращает имя пользователя, извлеченное из токена
         final Claims claims = extractAllClaims(token);
         return claims.get("id", Long.class);
     }
 
     @Override
     public String generateToken(CustomUserDetails userDetails) {
-        // Генерирует JWT токен для указанного объекта UserDetails
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", userDetails.getUserId());
         return generateToken(claims, userDetails);
@@ -38,9 +35,27 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public boolean isTokenValid(String token, CustomUserDetails userDetails) {
-        //Возвращает true, если токен действителен для указанного пользователя, в противном случае - falseВозвращает true
         final Long userId = extractUserName(token);
-        return (userId.equals(userDetails.getUserId())) && !isTokenExpired(token);
+        return (userId.equals(userDetails.getUserId())) && isTokenExpired(token);
+    }
+
+    @Override
+    public String generateRefreshToken(CustomUserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", userDetails.getUserId());
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(userDetails.getUserId().toString())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith(getRefreshSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    @Override
+    public boolean isRefreshTokenValid(String refreshToken, CustomUserDetails userDetails) {
+        final Long userId = extractUserName(refreshToken);
+        return (userId.equals(userDetails.getUserId())) && isTokenExpired(refreshToken);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
@@ -53,15 +68,13 @@ public class JwtServiceImpl implements JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUserId().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     private boolean isTokenExpired(String token) {
-        //Извлекает дату истечения срока действия токена из JWT токена
-        //Возвращает дату истечения срока действия токена
-        return extractExpiration(token).before(new Date());
+        return !extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(String token) {
@@ -69,12 +82,18 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token)
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
                 .getBody();
     }
 
     private Key getSigningKey() {
-        //Возвращает ключ подписи для создания и проверки подписи JWT токенов 3 фаза jwt токена
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+    private Key getRefreshSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }

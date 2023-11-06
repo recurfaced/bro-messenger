@@ -40,7 +40,10 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .cors((cors)->cors
                         .configurationSource(apiConfigurationSource())
                 )
-                .authorizeHttpRequests(request -> request.requestMatchers("/api/users/signin","/api/users/signup","/ws")
+                .authorizeHttpRequests(request -> request.requestMatchers("/api/users/signin",
+                                "/api/users/signup",
+                                "/ws",
+                                "/api/users/refresh")
                         .permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

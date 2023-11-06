@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 public class UserAuthDto {
 
-    private Long id;
+    private  Long id;
 
     private String username;
 

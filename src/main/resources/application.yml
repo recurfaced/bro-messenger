@@ -16,3 +16,7 @@ spring:
 token:
   signing:
     key: ${TOKEN_SIGNING_KEY}
+logging:
+  level:
+    com.example.bro-messenger.security: info
+

@@ -20,7 +20,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ChatService {
+public final class ChatService {
     private final ChatMembersRepository chatMembersRepository;
     private final ChatsRepository chatsRepository;
     private final UserRepository userRepository;

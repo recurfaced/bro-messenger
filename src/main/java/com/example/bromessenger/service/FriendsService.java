@@ -8,6 +8,7 @@ import com.example.bromessenger.service.JWT.JwtService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@Data
-public class FriendsService {
+@RequiredArgsConstructor
+public final class FriendsService {
 
     private final UserServiceImpl userService;
     private final FriendsRepository friendsRepository;

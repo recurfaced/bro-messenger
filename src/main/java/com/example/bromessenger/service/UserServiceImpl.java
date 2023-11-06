@@ -6,23 +6,25 @@ import com.example.bromessenger.model.mapper.UserMapperImpl;
 import com.example.bromessenger.repositories.FriendsRepository;
 import com.example.bromessenger.repositories.UserRepository;
 import com.example.bromessenger.service.JWT.JwtService;
+import com.example.bromessenger.web.resonse.JwtAuthenticationResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Data
 @AllArgsConstructor
 @Slf4j
-public class UserServiceImpl {
+public final class UserServiceImpl {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private UserMapperImpl userMapper;
@@ -67,4 +69,30 @@ public class UserServiceImpl {
         return jwtService.extractUserName(jwtToken);
     }
 
+
+    @SneakyThrows
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String refreshToken;
+        final Long userId;
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return;
+        }
+
+        refreshToken = authHeader.substring(7);
+        userId = jwtService.extractUserName(refreshToken);
+
+        if (userId != null) {
+            var userDetails = userRepository.findById(userId)
+                    .orElseThrow();
+            if (jwtService.isRefreshTokenValid(refreshToken, userDetails)) {
+                String accessToken = jwtService.generateToken(userDetails);
+                var authResponse = JwtAuthenticationResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build();
+                new ObjectMapper().writeValue(response.getOutputStream(),authResponse);
+            }
+        }
+    }
 }
