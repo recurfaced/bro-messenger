@@ -10,6 +10,8 @@ import com.example.bromessenger.repositories.ChatMembersRepository;
 import com.example.bromessenger.repositories.ChatsRepository;
 import com.example.bromessenger.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -24,6 +26,7 @@ public final class ChatService {
     private final ChatMembersRepository chatMembersRepository;
     private final ChatsRepository chatsRepository;
     private final UserRepository userRepository;
+    private final UserServiceImpl userService;
     public void deleteMemberFromChat(Long userId, Long chatId) {
         Optional<ChatMember> chatMembersOptional = chatMembersRepository.findByUserIdAndChatId(userId, chatId);
         if (chatMembersOptional.isPresent()){
@@ -36,31 +39,36 @@ public final class ChatService {
         }
     }
 
-    public void createChat(CreateChatRequest createChatRequest){
-        log.info(createChatRequest.toString());
-        User user = userRepository.findById(createChatRequest.getUserId())
-                .orElseThrow(()->new ResourceNotFoundException("user not found"));
-        User friend = userRepository.findById(createChatRequest.getFriendId())
-                .orElseThrow(()->new ResourceNotFoundException("user not found"));
+    public void createChat(HttpServletRequest request, Long friendId) {
+        Long userId = userService.getUserIdByJWT(request);
+        User user = getUserById(userId);
+        User friend = getUserById(friendId);
 
+        Chat chat = createPrivateChat("лс");
 
-
-        Chat chat = new Chat();
-        chat.setName("лс");
-        chat.setTypeChat(TypeChat.PRIVATE);
-        chatsRepository.save(chat);
-
-        ChatMember chatMember1 = new ChatMember();
-        ChatMember chatMember2 = new ChatMember();
-        chatMember1.setChat(chat);
-        chatMember1.setUser(user);
-        chatMembersRepository.save(chatMember1);
-
-        chatMember2.setChat(chat);
-        chatMember2.setUser(friend);
-        chatMembersRepository.save(chatMember2);
-
+        createChatMember(chat, user);
+        createChatMember(chat, friend);
     }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
+    private Chat createPrivateChat(String name) {
+        Chat chat = new Chat();
+        chat.setName(name);
+        chat.setTypeChat(TypeChat.PRIVATE);
+        return chatsRepository.save(chat);
+    }
+
+    private void createChatMember(Chat chat, User user) {
+        ChatMember chatMember = new ChatMember();
+        chatMember.setChat(chat);
+        chatMember.setUser(user);
+        chatMembersRepository.save(chatMember);
+    }
+
     public void createChatMembers(ChatMember chatMembersRequest){
         chatMembersRepository.save(chatMembersRequest);
     }

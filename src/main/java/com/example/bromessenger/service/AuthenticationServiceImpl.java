@@ -61,6 +61,7 @@ public final class AuthenticationServiceImpl implements AuthenticationService {
         String refreshJwt = jwtService.generateRefreshToken(user);
 
 
+
         return JwtAuthenticationResponse.builder()
                 .refreshToken(refreshJwt)
                 .accessToken(accessJwt)

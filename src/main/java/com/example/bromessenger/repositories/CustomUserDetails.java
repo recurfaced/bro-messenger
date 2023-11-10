@@ -1,4 +1,4 @@
-package com.example.bromessenger.sex;
+package com.example.bromessenger.repositories;
 
 
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,7 +1,6 @@
 <template>
     <div>
         <header>
-            <!-- это шаблон который применится ко всему сайту -->
         </header>
         <main>
             <router-view></router-view>

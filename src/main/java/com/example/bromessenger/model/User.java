@@ -1,7 +1,7 @@
 package com.example.bromessenger.model;
 
 import com.example.bromessenger.model.enums.Role;
-import com.example.bromessenger.sex.CustomUserDetails;
+import com.example.bromessenger.repositories.CustomUserDetails;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

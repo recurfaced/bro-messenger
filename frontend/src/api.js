@@ -37,17 +37,17 @@ export const getFriendsListRequest = async () => {
 
     return response.data;
 };
-export const getChatId = async (chatsRequest) => {
-    const token = getToken()
-        const response = await instance.post('/chat/',
-            chatsRequest,
-            {
-            headers:{
-                Authorization: `Bearer ${token}`,
-            }
-        });
-    console.log("все прошло сексуально" + response.data)
+export const getChatId = async (friendId) => {
+    const token = getToken();
+    const response = await instance.post(`/chat/${friendId}`, null, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    });
+    console.log("все прошло сексуально", response.data);
 };
+
+
 
 export const authUser = async (auth)=>{
     const response = await instance.post("/users/signin",
@@ -57,8 +57,6 @@ export const authUser = async (auth)=>{
                 'Content-Type': 'application/json',
             },
         })
-    var token =response.data.token
-    document.cookie=`token=${token}; path=/`;
     console.log(response.data)
     return response.data;
 };

@@ -1,4 +1,13 @@
 <template>
+    <div class="main">
+        <MainMenu :friendsCount="localFriendsCount"
+                  @showProfile="showProfile"
+                  @showNews="showNews"
+                  @showFriends="showFriends"
+                  @showMessages="showMessages" />
+        <UserInfo :username="localUsername"
+                  avatarText="avatar" />
+    </div>
     <div>
         <input type="text" v-model="searchTerm" placeholder="Поиск бро">
         <h1>Список друзей</h1>
@@ -13,7 +22,7 @@
         <ul>
             <li v-for="friendRequest in friendsListRequest" :key="friendRequest.id">
                 {{ friendRequest }}
-                <button @click="sendMessage(friendRequest.id)">Принять в бро</button>
+                <button @click="sendRequest(friendRequest.id)">Принять в бро</button>
             </li>
         </ul>
     </div>
@@ -21,8 +30,14 @@
 
 <script>
 import {getFriendsList, getFriendsListRequest,getChatId} from "@/api";
+import MainMenu from "@/components/global/MainMenu.vue";
+import UserInfo from "@/components/global/UserInfo.vue";
 
 export default {
+    components: {
+        MainMenu,
+        UserInfo,
+    },
     name: "UserFriendsList",
     data() {
         return {
@@ -34,8 +49,10 @@ export default {
     async mounted() {
         try {
             const friends = await getFriendsList();
+            console.log(friends)
             const requestFriends = await getFriendsListRequest();
             this.friendsList = friends;
+            console.log(this.friendsList)
             this.friendsListRequest = requestFriends;
         } catch (error) {
             console.error(error);
@@ -49,19 +66,19 @@ export default {
     },
     methods: {
         async sendMessage(friendId) {
-            const userId = parseInt(this.$route.params.userId, 10);
-            console.log(userId);
             console.log(friendId);
 
-            const createChat = {
-                userId: userId,
-                friendId: friendId,
-            };
-            console.log(createChat)
+            try {
+                await getChatId(1);
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async sendRequest(userId) {
+            console.log(userId);
 
             try {
-                await getChatId(createChat);
-                this.$router.push({ name: 'chat-user', params: { id: friendId, userId: userId } });
+                await getChatId(userId);
             } catch (error) {
                 console.error(error);
             }
@@ -73,5 +90,9 @@ export default {
 <style scoped>
 ul {
     list-style-type: none;
+}
+.main {
+    margin: 0 250px;
+    display: flex;
 }
 </style>

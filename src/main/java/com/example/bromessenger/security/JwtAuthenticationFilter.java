@@ -2,7 +2,7 @@ package com.example.bromessenger.security;
 
 import com.example.bromessenger.service.CustomUserDetailsService;
 import com.example.bromessenger.service.JWT.JwtService;
-import com.example.bromessenger.sex.CustomUserDetails;
+import com.example.bromessenger.repositories.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -52,6 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.setContext(context);
             }
         }
+        System.out.println("пришел запрос");
         filterChain.doFilter(request, response);
     }
 }

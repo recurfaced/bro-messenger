@@ -1,7 +1,6 @@
 package com.example.bromessenger.service.JWT;
 
-import com.example.bromessenger.sex.CustomUserDetails;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.example.bromessenger.repositories.CustomUserDetails;
 
 
 public interface JwtService {

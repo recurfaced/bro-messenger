@@ -6,6 +6,9 @@
     </div>
 </template>
 <script>
+
+import {getWsConnect} from "@/wsApi";
+
 export default {
     data() {
         return {
@@ -16,15 +19,33 @@ export default {
         };
     },
     methods: {
-        connect() {
-            this.ws = new WebSocket('ws://localhost:8084/ws');
-            this.ws.onopen = () => {
-                console.log("Connected");
-            };
-            this.ws.onmessage = this.showGreeting;
-            this.setConnected(true);
-
+        async connect() {
+            try {
+                const responseStatus = await getWsConnect();
+                console.log(responseStatus)
+                if (responseStatus === 101) {
+                    const token = this.getToken();
+                    this.ws = new WebSocket(`ws://localhost:8084/ws?token=${token}`);
+                    this.ws.onopen = () => {
+                        console.log("Connected");
+                    };
+                    this.ws.onmessage = this.showGreeting;
+                    this.setConnected(true);
+                } else {
+                    console.error("Не удалось установить WebSocket соединение.");
+                }
+            } catch (error) {
+                console.error("Произошла ошибка:", error);
+            }
         },
+
+        getToken() {
+            return document.cookie
+                .split("; ")
+                .find(row => row.startsWith("token="))
+                .split("=")[1];
+        },
+
         disconnect() {
             if (this.ws !== null) {
                 this.ws.close();
@@ -34,7 +55,6 @@ export default {
         },
         sendName() {
             if (this.ws !== null) {
-
                 const message = {
                     name: this.name
                 };

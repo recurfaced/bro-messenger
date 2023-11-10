@@ -1,7 +1,7 @@
 package com.example.bromessenger.service;
 
 import com.example.bromessenger.repositories.UserRepository;
-import com.example.bromessenger.sex.CustomUserDetails;
+import com.example.bromessenger.repositories.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

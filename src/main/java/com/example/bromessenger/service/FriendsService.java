@@ -4,16 +4,11 @@ import com.example.bromessenger.model.Friend;
 import com.example.bromessenger.model.User;
 import com.example.bromessenger.repositories.FriendsRepository;
 import com.example.bromessenger.repositories.UserRepository;
-import com.example.bromessenger.service.JWT.JwtService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,20 +21,27 @@ public final class FriendsService {
 
     private final UserServiceImpl userService;
     private final FriendsRepository friendsRepository;
-    private final JwtService jwtService;
     private final UserRepository userRepository;
 
-    public ResponseEntity<?> deleteFriendById(Long userId, Long friendId) {
-       Optional<Friend> optionalFriends =
-               friendsRepository.findByUserIdAndFriendId(userId, friendId);
-       if (optionalFriends.isPresent()){
-           Friend friends =optionalFriends.get();
-           friendsRepository.deleteById(friends.getId());
-           return ResponseEntity.ok("пользователь удален из ваших списков друзей");
-       }else {
-           throw new EntityNotFoundException(
-                   "Friend not found with userId: " + userId + " and friend: " + friendId);
-       }
+    public void deleteFriendById(HttpServletRequest request, Long friendId) {
+        Long userId = userService.getUserIdByJWT(request);
+        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> friendOptional = userRepository.findById(friendId);
+
+        if (userOptional.isPresent() && friendOptional.isPresent()) {
+            User user = userOptional.get();
+            User friend = friendOptional.get();
+
+            Friend requestToAccessFriend = friendsRepository.findByUserAndFriendId(user, friendId);
+            if (requestToAccessFriend != null) {
+                requestToAccessFriend.setAccept(false);
+                friendsRepository.save(requestToAccessFriend);
+            } else {
+                throw new ResourceNotFoundException("denied request to delete friend");
+            }
+        } else {
+            throw new ResourceNotFoundException("User or Friend not found");
+        }
 
     }
 
@@ -83,7 +85,6 @@ public final class FriendsService {
         List<Friend> requestList = friendsRepository.countFriendsByUserId(
                 userService.getUserIdByJWT(request)
         );
-
         return getLongStringMap(requestList);
     }
 
@@ -97,6 +98,28 @@ public final class FriendsService {
         }
         return friendsMap;
     }
+
+    public void accessFriend(HttpServletRequest request, Long friendId) {
+        Long userId = userService.getUserIdByJWT(request);
+        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> friendOptional = userRepository.findById(friendId);
+
+        if (userOptional.isPresent() && friendOptional.isPresent()) {
+            User user = userOptional.get();
+            User friend = friendOptional.get();
+
+            Friend requestToAccessFriend = friendsRepository.findByUserAndFriendId(user, friendId);
+            if (requestToAccessFriend != null) {
+                requestToAccessFriend.setAccept(true);
+                friendsRepository.save(requestToAccessFriend);
+            } else {
+                throw new ResourceNotFoundException("denied request to delete friend");
+            }
+        } else {
+            throw new ResourceNotFoundException("User or Friend not found");
+        }
+    }
+
 
     /*public ListFriendsResponse listFriendsResponse(HttpServletRequest request){
         Long id = userService.getUserIdByJWT(request);
