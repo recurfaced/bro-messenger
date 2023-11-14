@@ -10,6 +10,9 @@
 import {getWsConnect} from "@/wsApi";
 
 export default {
+
+    props: ['chatId'],
+
     data() {
         return {
             ws: null,
@@ -23,9 +26,8 @@ export default {
             try {
                 const responseStatus = await getWsConnect();
                 console.log(responseStatus)
-                if (responseStatus === 101) {
-                    const token = this.getToken();
-                    this.ws = new WebSocket(`ws://localhost:8084/ws?token=${token}`);
+                if (responseStatus === 200) {
+                    this.ws = new WebSocket(`ws://localhost:8084/ws`);
                     this.ws.onopen = () => {
                         console.log("Connected");
                     };
@@ -37,13 +39,6 @@ export default {
             } catch (error) {
                 console.error("Произошла ошибка:", error);
             }
-        },
-
-        getToken() {
-            return document.cookie
-                .split("; ")
-                .find(row => row.startsWith("token="))
-                .split("=")[1];
         },
 
         disconnect() {

@@ -21,9 +21,10 @@ const routes = [
         component: SignUp,
     },
     {
-        path: '/chat-user',
+        path: '/chat-user/:chatId',
         name: 'chat-user',
         component: Chat,
+        props: true
     },
     {
         path: '/main',

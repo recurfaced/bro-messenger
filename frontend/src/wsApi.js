@@ -17,9 +17,10 @@ const getToken = () => {
 export const getWsConnect = async () => {
     const token = getToken();
     try {
-        const response = await instance.get("/ws", {
+        const response = await instance.get("/ws-connect", {
             headers: {
                 Authorization: `Bearer ${token}`,
+
             },
         });
 

@@ -8,7 +8,7 @@ import org.springframework.web.socket.config.annotation.*;
 public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(new SocketHandler(), "/ws")
-                .setAllowedOrigins("http://localhost:8080")
-                .addInterceptors(new HttpSessionHandshakeInterceptor());;
+                .setAllowedOrigins("http://localhost:8080");
     }
+
 }

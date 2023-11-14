@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,16 +40,37 @@ public final class ChatService {
         }
     }
 
-    public void createChat(HttpServletRequest request, Long friendId) {
+    public Long createChat(HttpServletRequest request, Long friendId) {
         Long userId = userService.getUserIdByJWT(request);
+        log.info(friendId.toString());
+        log.info(userId.toString());
         User user = getUserById(userId);
         User friend = getUserById(friendId);
 
-        Chat chat = createPrivateChat("лс");
+        Long existingChatId = isChatExist(user, friend);
+        if (existingChatId != null) {
+            return existingChatId;
+        } else {
+            Chat chat = createPrivateChat("лс");
+            createChatMember(chat, user);
+            createChatMember(chat, friend);
 
-        createChatMember(chat, user);
-        createChatMember(chat, friend);
+            return chat.getId();
+        }
     }
+
+    private Long isChatExist(User user, User friend) {
+        List<Chat> existingChats = chatsRepository.findChatsByMembers(user, friend);
+
+        for (Chat chat : existingChats) {
+            if (chat.getChatMembers().stream().anyMatch(member -> member.getUser().equals(friend))) {
+                return chat.getId();
+            }
+        }
+
+        return null;
+    }
+
 
     private User getUserById(Long userId) {
         return userRepository.findById(userId)

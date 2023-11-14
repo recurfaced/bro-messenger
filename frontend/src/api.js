@@ -44,7 +44,7 @@ export const getChatId = async (friendId) => {
             Authorization: `Bearer ${token}`,
         }
     });
-    console.log("все прошло сексуально", response.data);
+    return response.data;
 };
 
 
@@ -67,6 +67,17 @@ export const getUserById = async () => {
             Authorization: `Bearer ${token}`,
         },
     });
+    return response.data;
+};
+
+export const addFriendRequest = async (friendId)=>{
+    const token = getToken();
+    const response = await instance.post(`/friends/access-friends/${friendId}`,
+        null,{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
     return response.data;
 };
 

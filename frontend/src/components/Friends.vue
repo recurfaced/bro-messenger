@@ -12,24 +12,24 @@
         <input type="text" v-model="searchTerm" placeholder="Поиск бро">
         <h1>Список друзей</h1>
         <ul>
-            <li v-for="friend in friendsList" :key="friend.id">
-                {{ friend }}
-                <button @click="sendMessage(friend.id)">Написать bro</button>
+            <li v-for="(friendName, friendId) in friendsList" :key="friendId">
+                {{ friendName }}
+                <button @click="sendMessage(friendId)">Написать bro</button>
             </li>
         </ul>
 
         <h1>Запросы на дружбу</h1>
         <ul>
-            <li v-for="friendRequest in friendsListRequest" :key="friendRequest.id">
+            <li v-for="(friendRequest, friendId) in friendsListRequest" :key="friendId">
                 {{ friendRequest }}
-                <button @click="sendRequest(friendRequest.id)">Принять в бро</button>
+                <button @click="sendRequest(friendId)">Принять в бро</button>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
-import {getFriendsList, getFriendsListRequest,getChatId} from "@/api";
+import {getFriendsList, getFriendsListRequest,getChatId,addFriendRequest} from "@/api";
 import MainMenu from "@/components/global/MainMenu.vue";
 import UserInfo from "@/components/global/UserInfo.vue";
 
@@ -69,7 +69,9 @@ export default {
             console.log(friendId);
 
             try {
-                await getChatId(1);
+                const chatId = await getChatId(friendId);
+                console.log(chatId);
+                //this.$router.push({ name: 'chat-user', params: { chatId: chatId } });
             } catch (error) {
                 console.error(error);
             }
@@ -78,7 +80,8 @@ export default {
             console.log(userId);
 
             try {
-                await getChatId(userId);
+                const chatId = await addFriendRequest(userId);
+                console.log(chatId);
             } catch (error) {
                 console.error(error);
             }
