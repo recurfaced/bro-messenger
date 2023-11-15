@@ -25,8 +25,7 @@
                      'Content-Type': 'application/json',
              }})
                  .then((response)=> {
-                     var token = response.data; // Предполагается, что токен находится в свойстве data объекта ответа
-                     // Сохранение токена в куках с именем "token" и сроком жизни, например, 1 час
+                     var token = response.data;
                      document.cookie = `token=${token}; path=/`;
                      console.log(response);
                  })

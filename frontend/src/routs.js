@@ -9,35 +9,36 @@ import ListFriends from "@/components/Friends.vue";
 const routes = [
     {
         path: '/',
-        redirect: '/signin', // перенаправление на /dashboard при попытке зайти на /
+        redirect: '/signin',
     },
     {
         path: '/signin',
-        component: Login, // перенаправление на /dashboard при попытке зайти на /
+        component: Login,
     },
 
     {
         path: '/signup',
-        component: SignUp, // перенаправление на /dashboard при попытке зайти на /
+        component: SignUp,
     },
     {
-        path: '/chat',
-        component: Chat, // перенаправление на /dashboard при попытке зайти на /
+        path: '/chat-user/:chatId',
+        name: 'chat-user',
+        component: Chat,
+        props: true
     },
     {
         path: '/main',
-        component: Main, // перенаправление на /dashboard при попытке зайти на /
+        component: Main,
     },
     {
-        path: '/mainPage/:userId', // Этот путь ожидает параметр userId
-        name: 'mainPage', // Имя маршрута
-        component: Main, // Компонент, который будет отображаться
-        props: true, // Позволяет передавать параметры как props в компонент
+        path: '/mainPage',
+        name: 'mainPage',
+        component: Main,
     },
     {
-        path: '/friends/:userId', // Этот путь ожидает параметр userId
+        path: '/friends',
         name: "UserFriendsList",
-        component: ListFriends, // Компонент, который будет отображаться
+        component: ListFriends,
         props: true,
     },
 

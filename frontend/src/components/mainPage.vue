@@ -1,57 +1,64 @@
 <template>
-    <div>
-        <h1>{{ username }}'a профиль</h1>
-        <p>Друзья: {{ friendsCount }}</p>
-        <button @click="showProfile">Мой профиль</button>
-        <button @click="showMessages">Сообщения</button>
-        <button @click="showFriends">Друзья</button>
+    <div class="main">
+        <MainMenu :friendsCount="localFriendsCount"
+                  @showProfile="showProfile"
+                  @showNews="showNews"
+                  @showFriends="showFriends"
+                  @showMessages="showMessages" />
+        <UserInfo :username="localUsername"
+                  avatarText="avatar" />
     </div>
 </template>
 
 <script>
-import { getFriendsCount, getUserById } from "@/api";
-
+import MainMenu from "@/components/global/MainMenu.vue";
+import UserInfo from "@/components/global/UserInfo.vue";
+import { getUserById } from "@/api";
 export default {
+    components: {
+        MainMenu,
+        UserInfo,
+    },
     data() {
         return {
-            username: "",
-            friendsCount: 0,
-
+            localUsername: "",
+            localFriendsCount: 0,
         };
+    },
+    props: {
+        username: String,
+        friendsCount: Number,
     },
     methods: {
         showProfile() {
             console.log("Показать профиль");
         },
+        showNews() {
+            console.log("Показать новости");
+        },
         showMessages() {
             console.log("Показать сообщения");
         },
         showFriends() {
-            this.$router.push({ name: 'UserFriendsList', params: { userId: this.$route.params.userId } });
-        },
-
-        async fetchData() {
-            const userId = this.$route.params.userId;
-            try {
-                const [userResponse, friendsCount] = await Promise.all([
-                    getUserById(userId),
-                    getFriendsCount(userId),
-                ]);
-
-                this.username = userResponse.username;
-                this.friendsCount = friendsCount;
-            } catch (error) {
-                console.error(error);
-                this.$router.push('/error');
-            }
+            this.$router.push({ name: "UserFriendsList" });
         },
     },
-    mounted() {
-        this.fetchData();
+    async beforeMount() {
+        try {
+            const userResponse = await getUserById();
+            this.localUsername = userResponse.username;
+            this.localFriendsCount = userResponse.friends;
+        } catch (error) {
+            console.error(error);
+            this.$router.push('/error');
+        }
     },
 };
 </script>
 
 <style scoped>
-/* Здесь вы можете добавить стили для вашей страницы профиля */
+.main {
+    margin: 0 250px;
+    display: flex;
+}
 </style>
