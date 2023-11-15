@@ -24,10 +24,10 @@ export const getWsConnect = async () => {
             },
         });
 
-        return response.status; // Вернуть статус ответа
+        return response.status;
 
     } catch (error) {
         console.error("Произошла ошибка при установке соединения:", error);
-        return null; // Вернуть null в случае ошибки
+        return null;
     }
 };

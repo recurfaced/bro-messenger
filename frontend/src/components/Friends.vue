@@ -70,8 +70,7 @@ export default {
 
             try {
                 const chatId = await getChatId(friendId);
-                console.log(chatId);
-                //this.$router.push({ name: 'chat-user', params: { chatId: chatId } });
+                this.$router.push({ name: 'chat-user', params: { chatId: chatId } });
             } catch (error) {
                 console.error(error);
             }
