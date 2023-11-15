@@ -25,12 +25,10 @@ import java.util.Optional;
 @AllArgsConstructor
 @Slf4j
 public final class UserServiceImpl {
-
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private UserMapperImpl userMapper;
     private final FriendsRepository friendsRepository;
-
     public UserAuthDto editUserInfo(HttpServletRequest request, User userRequest) {
         Long id = getUserIdByJWT(request);
         return userRepository.findById(id)

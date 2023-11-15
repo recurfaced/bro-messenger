@@ -1,7 +1,6 @@
 <template>
     <div>
         <div id="greetings">{{ greetings }}</div>
-        <p>Chat ID: {{ localChatId }}</p>
         <input v-model="name" placeholder="Введите сообщение" />
         <button @click="sendName">Отправить</button>
     </div>
@@ -20,16 +19,8 @@ export default {
             name: '',
             greetings: '',
             isConnected: false,
-            localChatId: null,
         };
     },
-    beforeRouteEnter(to, from, next) {
-        const chatId = to.params.chatId;
-        next(vm => {
-            vm.localChatId = chatId;
-        });
-    },
-
     methods: {
         async connect() {
             try {
@@ -37,7 +28,6 @@ export default {
                 console.log(responseStatus)
                 if (responseStatus === 200) {
                     this.ws = new WebSocket(`ws://localhost:8084/ws`);
-
                     this.ws.onopen = () => {
                         console.log("Connected");
                     };
@@ -59,10 +49,9 @@ export default {
             console.log('Disconnected');
         },
         sendName() {
-            if (this.localChatId && this.ws.readyState === WebSocket.OPEN) {
+            if (this.ws !== null) {
                 const message = {
-                    type: 'subscribe',
-                    chatId: this.localChatId,
+                    name: this.name
                 };
                 this.ws.send(JSON.stringify(message));
             }
